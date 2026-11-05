@@ -12,6 +12,9 @@ against Fig. 8).
 
 - Runs: `contact_bending_test.py` (+ `run_discretization.sh` for the
   mesh sweep), `contact_bending_test_3D_bead.py 50` (1-node baseline).
+  `contact_bending_test_2node.py` is an independent, in-repo-regenerable
+  2-node baseline (not used by the figures below, which use the external
+  npz reference instead) — see `contact_bending_test_2node_README.md`.
 - Figures: `postprocessing/fig1_geometry_evolution.py` (Fig. 1-style
   geometry snapshots), `postprocessing/fig_extended_arcs.py` (Fig. 2,
   the arc-contact-model visualization), `postprocessing/fig2_force_displacement.py`

@@ -5,13 +5,21 @@ obstacle: contact + large bending in one controlled problem. Used as the
 first validation of the regularized contact force and its Jacobian.
 
 Two variants are kept (the paper's three-node vs. one-node comparison;
-the 2-node baseline is a separate, external simulation — see "Paper
-data provenance" below):
+the 2-node baseline used in the paper's own figures is a separate,
+external simulation — see "Paper data provenance" below):
 
 | script | contact primitive | outputs |
 |---|---|---|
 | `contact_bending_test.py` | three-node arc-to-arc, 3D model constrained to a plane (Sec. 3.1) | `contact_output_files/` |
 | `contact_bending_test_3D_bead.py` | one-node bead (node-to-arc distance) | `contact_output_files_3D_bead/` |
+| `contact_bending_test_2node.py` | two-node (segment-to-segment IMC, dismech-native) | `contact_output_files_2node/` |
+
+`contact_bending_test_2node.py` is an **independent** 2-node baseline
+added so the repo has a fully self-contained, in-repo-regenerable
+alternative to the external 2-node npz (see `contact_bending_test_2node_README.md`).
+It reuses dismech's existing self-contact IMC engine rather than any new
+contact-energy code; not yet run at paper scale (see that README for the
+estimated multi-day cost) and not wired into the figures below.
 
 ## What was tried
 
