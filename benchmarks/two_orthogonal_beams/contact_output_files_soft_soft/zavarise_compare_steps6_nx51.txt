@@ -1,0 +1,17 @@
+# Step-by-step comparison against Zavarise & Wriggers (2000) Example 2, Table IV (μ=0)
+# Columns:
+#   step              load step index
+#   FN_local[N]       |F_total| on Beam X (purely-normal contact => F_T_local = 0)
+#   FN_paper[N]       Table IV (μ=0) reference value
+#   ratio             FN_local / FN_paper
+#   Fx_global[N]      global x-component of resultant on Beam X (~0)
+#   Fy_global[N]      global y-component (dominant)
+#   Fz_global[N]      global z-component (geometric tilt projection)
+#   tilt_deg          angle of resultant from global +y axis
+# step	FN_local[N]	FN_paper[N]	ratio	Fx_global[N]	Fy_global[N]	Fz_global[N]	tilt_deg
+1	0.000000e+00	0.000000e+00	nan	0.000000e+00	0.000000e+00	0.000000e+00	0.0000
+2	0.000000e+00	1.000000e-09	nan	0.000000e+00	0.000000e+00	0.000000e+00	0.0000
+3	1.905417e+01	1.720000e+01	1.107801e+00	-1.777938e-10	-1.903592e+01	-8.338493e-01	2.5082
+4	3.534228e+01	3.430000e+01	1.030387e+00	4.872937e-10	-3.520510e+01	-3.110911e+00	5.0498
+5	5.241408e+01	5.130000e+01	1.021717e+00	3.244268e-10	-5.195940e+01	-6.888858e+00	7.5523
+6	6.891255e+01	6.840000e+01	1.007493e+00	-1.070088e-09	-6.785905e+01	-1.200370e+01	10.0314

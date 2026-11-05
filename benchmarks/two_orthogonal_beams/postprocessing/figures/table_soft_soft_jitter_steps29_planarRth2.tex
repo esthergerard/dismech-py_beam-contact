@@ -1,0 +1,17 @@
+\begin{table*}[ht]
+    \centering
+    \small
+    \caption{Jitter metrics of the soft-soft test (two orthogonal flexible beams, $N_x = 21$, 29~load steps, planarRth2) for the different contact models, computed on the time signal of the normal contact force $|F_{N,y}|$ on Beam~X over the established-contact phase (from 2~s after first contact to the end of loading, with a 0.2~s smoothing window for the RMS-vs-smooth metric), at $\mu = 0$ and $\mu = 0.1$. Forces are in newtons; the peak normal force is $\approx 168$~N in every case.}
+    \label{tab:metrics_jitter_soft_soft}
+    \begin{tabular}{llccccc}
+        \toprule
+        Friction & Simulation & Max P2P & Mean P2P & Max 3-pt & Mean 3-pt & RMS vs Smooth \\
+        \midrule
+        $\mu = 0$ & 2-node & 5.8e-01 & 8.3e-02 & 5.5e-02 & 1.5e-02 & 1.7e-01 \\
+         & 3-node (ours) & \textbf{2.0e-01} & \textbf{6.8e-02} & \textbf{5.8e-05} & \textbf{5.8e-05} & \textbf{5.5e-02} \\
+        \midrule
+        $\mu = 0.1$ & 2-node & 5.5e-01 & 8.2e-02 & 5.5e-02 & 1.5e-02 & 1.7e-01 \\
+         & 3-node (ours) & \textbf{2.0e-01} & \textbf{6.8e-02} & \textbf{4.8e-03} & \textbf{2.3e-03} & \textbf{5.6e-02} \\
+        \bottomrule
+    \end{tabular}
+\end{table*}

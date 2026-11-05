@@ -1,0 +1,20 @@
+# Step-by-step comparison against Zavarise & Wriggers (2000) Example 2, Table IV
+# Simulation:   mu = 0.1, vel_tol = 0.001 m/s
+# Reference:    Table IV column for mu = 0.1
+# Columns:
+#   step              load step index
+#   FN_sim[N]         |F_total contact| on Beam X (~ normal contact magnitude)
+#   FN_paper[N]       Table IV reference F_N for the selected mu column
+#   FN_ratio          FN_sim / FN_paper
+#   FT_sim[N]         sqrt(Fx_fric^2 + Fz_fric^2) on Beam X (tangent-plane friction)
+#   FT_paper[N]       Table IV reference F_T for the selected mu column
+#   FT_ratio          FT_sim / FT_paper
+#   Ffric_z[N]        signed z component of friction on Beam X (dominant tangential)
+#   tilt_deg          angle of contact resultant from global +y axis
+# step	FN_sim[N]	FN_paper[N]	FN_ratio	FT_sim[N]	FT_paper[N]	FT_ratio	Ffric_z[N]	tilt_deg
+1	0.000000e+00	0.000000e+00	nan	0.000000e+00	0.000000e+00	nan	0.000000e+00	0.0000
+2	3.115404e-06	1.000000e-09	nan	3.115402e-07	0.000000e+00	nan	3.115402e-07	0.0649
+3	1.886688e+01	1.700000e+01	1.109817e+00	1.884837e+00	1.700000e+00	1.108728e+00	1.884837e+00	2.5385
+4	3.665452e+01	3.380000e+01	1.084453e+00	3.664004e+00	3.380000e+00	1.084025e+00	1.158564e+00	5.0947
+5	5.444806e+01	5.040000e+01	1.080319e+00	5.444417e+00	5.040000e+00	1.080241e+00	4.750214e-01	7.6238
+6	7.177849e+01	6.700000e+01	1.071321e+00	7.177282e+00	6.700000e+00	1.071236e+00	5.267621e-01	10.1356

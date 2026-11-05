@@ -1,0 +1,12 @@
+THREE-POINT BENDING TEST SUMMARY (Bead distance)
+n_beam_nodes = 15
+dt = 0.01
+total_time = 5.0
+log_step = 1
+save_interval_effective = 0.01
+snapshots_saved = 501
+final_time = 5.000000
+final_max_displacement = 5.000000000000e-03
+final_max_velocity = 9.740564752675e-04
+final_max_contact_force = 3.932682826766e-04
+final_total_vertical_contact_force = 3.925449758513e-04

@@ -1,0 +1,161 @@
+*Heading
+ Net pull-out, ALTERNATED weave -- JOB 1/5 of a restart chain: Phase A (ENGAGE) -- quadratic C3D10M, alpha=1000 damping (beta=0)
+** ==========================================================================
+** This is job 1 of 5 in a chain where EACH dismech phase is its own
+** Abaqus job, writing its OWN .odb, linked by *Restart:
+**
+**   job (this file)              writes            restart-reads from
+**   net_pullout_phaseA_engage     .odb/.res          (fresh model)
+**   net_pullout_phaseB_hold       .odb/.res          oldjob=net_pullout_phaseA_engage
+**   net_pullout_phaseC_release    .odb/.res          oldjob=net_pullout_phaseB_hold
+**   net_pullout_phaseD_free       .odb/.res          oldjob=net_pullout_phaseC_release
+**   net_pullout_phaseE_pullout    .odb/.res          oldjob=net_pullout_phaseD_free
+**
+** WHY: a crash/kill during a LATER phase (most likely PULLOUT: the
+** longest step, 1.2 s, with the largest sliding motion) must not put the
+** EARLIER phases' results at risk. Splitting into 5 jobs means each
+** completed phase's .odb is a closed, independent file on disk the
+** moment that job exits 0 -- nothing a later job does can touch it.
+** Run the chain with run_phaseA_to_E_chained.sh, which stops immediately
+** if any job fails (so you never restart a later phase from a dead one).
+**
+** SECOND LAYER: even within ONE job, *Restart, write below fires several
+** times per step (not just once at the end), so a crash partway through
+** a long step (e.g. PULLOUT, job 5) can be resumed from the last
+** checkpoint instead of redoing the whole step -- see job 5's own
+** header for the oldjob=itself / step=1 recipe. NOTE: this specific
+** job (A/ENGAGE) does NOT support that in-place resume as written --
+** it has no *Restart, read card (it is the fresh-model starting job),
+** so RESUME_INPLACE on job A would just rerun ENGAGE from t=0, not
+** resume mid-step. If Phase A itself ever needs this, add
+** "*Restart, read, step=1" right before "*Step, name=ENGAGE" below.
+**
+** All phase-mapping, timing and physics comments from the single-job
+** version (net_pullout_phaseA_to_E_explicit.inp) apply unchanged; see
+** that file for the full dismech-to-Abaqus phase correspondence table.
+** This job carries the complete model (mesh, material, contact,
+** permanent BCs, both amplitudes); jobs 2-5 are thin restart
+** continuations that each add only their own step.
+** ==========================================================================
+** THIS VARIANT (see ./README.md): quadratic tetrahedra (C3D10M) instead
+** of linear C3D4 (see ../quadratic_C3D10M_nodamping/README.md for the
+** undamped baseline), with pure mass-proportional Rayleigh damping
+** added: *Damping, alpha=1000, beta=0. This deck is one point of a
+** damping-coefficient sweep (alpha = 1, 10, 50, 100, 1000 s^-1)
+** characterizing the Rayleigh coefficient needed before damping
+** measurably affects the model's response; see ../quadratic_C3D10M_
+** alpha1000/README.md for the energy-based derivation (comparing
+** ALLVD against ALLIE) behind the value used in the paper. Beta is
+** left at zero because stiffness-proportional damping further reduces
+** the explicit stable timestep, which mass-proportional damping at
+** these magnitudes does not.
+**
+** At alpha<=1000, zeta = alpha/(2*omega) stays below ~4e-4 even at the
+** mesh's own stability-limiting frequency (~1.33e6 rad/s), so damping
+** does not interact with the mass-scaling target below; dt stays at
+** the baseline value, 1.5e-6. Contact, BCs, step timings, amplitudes
+** and output requests are otherwise identical to the archived linear
+** baseline.
+** ==========================================================================
+*Preprint, echo=NO, model=NO, history=NO, contact=NO
+**
+** ---------------------------- MESH ----------------------------------------
+*Include, input=net_pullout_alt_coarse_quad.inp
+**
+** ------------------------- COMBINED SETS -----------------------------------
+*Elset, elset=ALL_BEAMS
+X_BEAM_0, X_BEAM_1, X_BEAM_2, X_BEAM_3, X_BEAM_4,
+Y_BEAM_0, Y_BEAM_1, Y_BEAM_2, Y_BEAM_3, Y_BEAM_4
+*Nset, nset=X_ENDS_NEG
+X_BEAM_0_END_NEG, X_BEAM_1_END_NEG, X_BEAM_2_END_NEG, X_BEAM_3_END_NEG,
+X_BEAM_4_END_NEG
+*Nset, nset=X_ENDS_POS
+X_BEAM_0_END_POS, X_BEAM_1_END_POS, X_BEAM_2_END_POS, X_BEAM_3_END_POS,
+X_BEAM_4_END_POS
+*Nset, nset=Y_ENDS
+Y_BEAM_0_END_NEG, Y_BEAM_1_END_NEG, Y_BEAM_2_END_NEG, Y_BEAM_3_END_NEG,
+Y_BEAM_4_END_NEG, Y_BEAM_0_END_POS, Y_BEAM_1_END_POS, Y_BEAM_2_END_POS,
+Y_BEAM_3_END_POS, Y_BEAM_4_END_POS
+** The 4 "blue strand" x-beams (everything except the central i=2 one),
+** needed in job 4 (FREE) to hold them in place while X_BEAM_2_END_NEG
+** is released. Split neg/pos because the two ends carry opposite signs.
+** Defined here (not in job 4) because restart preserves the FULL model
+** database (sets included); defining them once, up front, means every
+** later job can reference them without redeclaring the mesh.
+*Nset, nset=NONCENTRAL_X_END_NEG
+X_BEAM_0_END_NEG, X_BEAM_1_END_NEG, X_BEAM_3_END_NEG, X_BEAM_4_END_NEG
+*Nset, nset=NONCENTRAL_X_END_POS
+X_BEAM_0_END_POS, X_BEAM_1_END_POS, X_BEAM_3_END_POS, X_BEAM_4_END_POS
+**
+** ------------------------ MATERIAL / SECTION -------------------------------
+*Material, name=SOFT
+*Elastic
+ 1.0e7, 0.45
+*Density
+ 1100.,
+** Pure mass-proportional Rayleigh damping; see the header block above
+** for the sweep rationale and the energy-based derivation it points to.
+*Damping, alpha=1000
+*Solid Section, elset=ALL_BEAMS, material=SOFT
+**
+** --------------------------- CONTACT PROPERTY ------------------------------
+** mu = 0 throughout (matches the dismech soft-alternated campaign).
+*Surface Interaction, name=NOFRIC
+**
+** ---------------------- PERMANENT BOUNDARY CONDITIONS ----------------------
+*Boundary
+Y_ENDS,     1, 3, 0.
+X_ENDS_NEG, 2, 3, 0.
+X_ENDS_POS, 2, 3, 0.
+**
+** ----------------------------- AMPLITUDES -----------------------------------
+** Both amplitudes used anywhere in the chain are declared here (model
+** data persists across the whole restart chain, so jobs 3 and 5 just
+** reference these by name -- no need to redeclare them downstream).
+*Amplitude, name=SMOOTH, definition=SMOOTH STEP
+ 0., 0., 0.1, 1.
+*Amplitude, name=SMOOTH_E, definition=SMOOTH STEP
+ 0., 0., 1.2, 1.
+**
+** =========================== STEP A: ENGAGE =================================
+*Step, name=ENGAGE
+*Dynamic, Explicit
+ , 0.1
+** dt unchanged from the archived baseline (see header block above);
+** this damping magnitude does not require a retune.
+*Fixed Mass Scaling, dt=1.5e-06, type=below min
+** Intra-step checkpoints every 0.02 s (5 across this 0.1 s step) so a
+** crash mid-step can resume near where it died (oldjob=net_pullout_
+** phaseA_engage, same job name, *Restart read with no step/inc given).
+*Restart, write, number interval=5
+**
+** General contact, all exterior surfaces, frictionless. Defined once
+** here; propagates unchanged through the rest of the chain.
+*Contact
+*Contact Inclusions, ALL EXTERIOR
+*Contact Property Assignment
+ ,  , NOFRIC
+**
+*Boundary, amplitude=SMOOTH
+X_ENDS_NEG, 1, 1, -3.75e-3
+X_ENDS_POS, 1, 1,  3.75e-3
+**
+** Field/history output requests: defined once here, propagate unchanged
+** through every later job in the chain (same rule as within one job).
+*Output, field, number interval=20
+*Node Output
+ U, V, RF
+*Element Output
+ S, LE
+*Contact Output
+ CSTRESS
+*Output, history, time interval=2.0e-4
+*Energy Output
+ ALLKE, ALLIE, ALLWK, ALLVD, ALLMW, ETOTAL
+*Node Output, nset=X_ENDS_POS
+ RF1, U1
+*Node Output, nset=X_BEAM_2_END_NEG
+ U1, U2, U3, RF1, RF2, RF3
+*Node Output, nset=X_BEAM_2_END_POS
+ U1, U2, U3, RF1, RF2, RF3
+*End Step

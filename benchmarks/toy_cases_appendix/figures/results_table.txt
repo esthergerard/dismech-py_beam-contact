@@ -1,0 +1,44 @@
+run  swept                     A (p2p) B@h/10   B@h/100  B@h/1000   C [1/h]  eta2/(d a)   mean|F|
+-------------------------------------------------------------------------------------------------
+R1   baseline                    185.8  1.38e+05 3.14e+05 3.27e+05    1.000       0.434     32.75
+R2   kappa=0                     95.36  9.34e+04 2.65e+05 2.76e+05    1.000           0       101
+R3   delta=0.05                  185.8  1.38e+05 3.14e+05 3.27e+05    1.000         1.3     32.75
+R4   refresh every iter          185.8  1.38e+05 3.14e+05 3.27e+05    1.000       0.434     32.75
+R5   N=100                       127.4  2.02e+05 2.99e+05 3.01e+05    1.000       0.106     85.38
+R6   N=200                       103.5  2.37e+05 2.86e+05 2.88e+05    1.000      0.0263       113
+
+Notes
+-----
+* A detrended with a 3h boxcar moving average (three edge-crossing periods).
+* B in force units per meter of slide, from the same 12k-sample log decimated
+  to ds = h/10, h/100, h/1000.  B(h/1000)/B(h/100) = 1.00-1.04 in all runs:
+  the signal SATURATES -> continuous, no true jumps (continuity test).
+* C = 1.000 cycles per edge length in all six runs.
+* R4 - R1 = 0 to machine precision (frozen candidate set has a 10*delta
+  broad-phase margin, contact_energy.py:103).
+* max|F_R3 - F_R1| = 0.208 (0.6% of mean force): the measurable trace of the
+  cutoff truncation for the IMPLEMENTED squared-log potential, matching its
+  predicted truncation slope 2*(log(1+e^{-c d})/c)*(e^{-c d}/(1+e^{-c d}))*
+  scale = 0.24 at delta=0.05 and ~1e-5 at delta=0.15.  The spec's x137
+  prediction assumes the unsquared U = log(1+exp(c(2-Dbar)))/c, which is NOT
+  what contact_energy.py implements.
+
+VERDICT
+-------
+The dominant perturbation is a superposition of two mechanisms, and the
+larger one is NOT on the candidate list.  (M4, unlisted) Adjacent segment
+pairs share a node; when the contact passes it, Lumelsky clamps both pairs
+to the SAME closest point (t=1 / t=0, identical gap) and each contributes
+the full penalty force: the total force exactly doubles (95.33 -> 190.66 in
+every run), an h- and kappa-independent 100% modulation at period h — this
+is the entire kappa=0 signal (A=95.4 on mean 101).  (M1) With kappa=5 the
+chord sagitta additionally modulates the single-pair force 4.9 -> 95 per
+period (eta2/(delta a)=0.43 puts the apparent gap across the activation
+boundary), which is why A(R1)/A(R2) = 1.95 instead of collapsing.  M2 is
+exactly zero (R4 == R1), and M3 is present but negligible (0.6% of mean at
+delta=0.05, 1e-5 relative at baseline; metric B saturates, so the force is
+continuous and there is no truncation jump to speak of).  The 0.42 +/- 0.07
+slope of log A vs log h fits neither M1 (2) nor M3 (0): it is the signature
+of the mixture — an h-independent double-count ceiling on top of a shrinking
+sagitta ripple — and the mean force itself grows with N (33 -> 85 -> 113) as
+more edges enter the support window.

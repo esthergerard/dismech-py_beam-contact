@@ -1,0 +1,108 @@
+\section{Perturbation of the contact force in the two-node model}
+\label{app:two_node_regularity}
+
+Section~\ref{sec:1and2nodes_models} states that the segment representation perturbs the contact force in one of two ways, according to whether the segment distances are combined by selecting a minimum or by summing over pairs. This appendix treats the two conventions in turn. Throughout, $\mathbf n$ denotes the unit vector from the closest point to the contacting point, $h$ the edge length, $a$ the rod radius, and $\Delta$ the centerline distance.
+
+\subsection{Selection by a minimum: a discontinuous force}
+\label{app:A1}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\linewidth]{Figures/Sec_3node_model/Schema-2nodes_jumps.pdf}
+    \caption{(a) Notation for the two-node (segment-based) contact model with a single closest pair. (b) The closest point $\boldsymbol{\gamma}(s^\ast)$ on the concave side of a junction. As the contacting point $\mathbf{x}$ crosses the bisector, the segment realizing the minimum changes and the closest point moves abruptly from one perpendicular foot to the other; the gradient of the distance jumps with it.}
+    \label{fig:AppA_schema}
+\end{figure}
+
+Let $\boldsymbol{\gamma} : [0,L] \to \mathbb{R}^2$ be the piecewise-linear centerline and $\mathbf{x}$ the position of a contacting point. When the contact response is routed through a single closest pair,
+\begin{equation}
+\begin{aligned}
+    \Delta(\mathbf{x}) &= \min_{s\in[0,L]} \lVert \boldsymbol{\gamma}(s) - \mathbf{x} \rVert, \\
+    s^\ast(\mathbf{x}) &= \operatorname*{argmin}_{s\in[0,L]} \lVert \boldsymbol{\gamma}(s) - \mathbf{x} \rVert .
+\end{aligned}
+\label{eq_A_mindist}
+\end{equation}
+Because the feasible interval does not depend on $\mathbf{x}$, the derivative of the minimum is obtained at fixed $s^\ast$, and the distance gradient reduces to
+\begin{equation}
+    \nabla_{\mathbf{x}} \Delta = \mathbf n
+      = \frac{\mathbf{x} - \boldsymbol{\gamma}(s^\ast)}
+             {\lVert \mathbf{x} - \boldsymbol{\gamma}(s^\ast) \rVert} .
+    \label{eq_A_grad}
+\end{equation}
+The regularity of the force therefore follows entirely from that of the closest \emph{point}, not from that of its parameter, and this distinction decides the two sides of a junction.
+
+On the convex side, the closest point is the junction node itself for every $\mathbf{x}$ in its normal cone. The parameter $s^\ast$ has a kink there, since it slides at constant rate along one segment and then stops abruptly, but the point at which it stops \emph{is} the node it was approaching, so $\boldsymbol{\gamma}(s^\ast)$ traces a continuous path and \eqref{eq_A_grad} does not jump. The non-smoothness of the parameter is absorbed by the orthogonality of the projection: it enters the gradient only through the coefficient $\mathbf n \cdot \boldsymbol{\gamma}'(s^\ast)$, which vanishes identically wherever the foot is interior.
+
+On the concave side there is no normal cone. The perpendicular feet of the two adjacent segments both exist and are both interior, the minimum is realized by one segment on either side of their bisector, and the two feet are separated by a finite distance. Crossing the bisector moves the closest point abruptly from one to the other, and \eqref{eq_A_grad} jumps. 
+
+For a junction whose two segments make a half-angle $\alpha$ with the bisector, and a contacting point placed on the bisector, the two one-sided limits of \eqref{eq_A_grad} give the closed form
+\begin{equation}
+    \bigl\lVert \llbracket \nabla_{\mathbf{x}}\Delta \rrbracket \bigr\rVert
+      = 2\cos\alpha = 2\sin(\phi/2) \;\simeq\; \kappa h ,
+    \label{eq_A_jump}
+\end{equation}
+with $\phi = \pi - 2\alpha$ the turning angle and $\kappa$ the discrete curvature. Since the constitutive prefactor $\partial E/\partial\Delta$ is continuous in $\Delta$, and $\Delta$ itself is continuous across the junction, the contact force inherits a jump proportional to \eqref{eq_A_jump},
+\begin{equation}
+    \llbracket \nabla_{\mathbf{x}} E \rrbracket
+      = \frac{\partial E}{\partial \Delta}\,
+        \llbracket \nabla_{\mathbf{x}}\Delta \rrbracket .
+    \label{eq_A_forcejump}
+\end{equation}
+The jump is thus linear in the curvature at contact and linear in the mesh size, which is the scaling measured by Crespel et al.\ \cite{crespel_bertails2024_highorder}. We verify \eqref{eq_A_jump} numerically on a polyline of two unit segments meeting at the origin, with the contacting point placed on the inward bisector at a fixed distance from the junction. Sweeping $\alpha$ from a near-hairpin kink ($\alpha = 10^\circ$) to a nearly flat polyline ($\alpha = 80^\circ$), the observed jump magnitude matches the prediction at every point.
+
+\subsection{Summation over pairs: multiplicity and oscillation}
+\label{app:A2}
+
+The formulations used in this paper, and in IPC and IMC, take no minimum across pairs: the energy is summed over every segment pair whose gap falls inside a cutoff. No selection occurs, and \eqref{eq_A_jump} has nothing to trigger. We establish what replaces it in two steps, first by counting active pairs in static configurations, then by measuring the force during sliding.
+
+\paragraph{Static multiplicity probe}
+The effect is easiest to see with nothing moving. Let us consider a contact directly over a node. That node is the end of the segment on its left and the end of the segment on its right, so both segments are at exactly the same distance from the contact, and both push back along exactly the same direction. Each one applies a full contact force. The rod is pushed twice where it should be pushed once.
+
+We measure this by counting how many segments push on the contact at once, and sweeping three configurations: a straight rod passing a sphere, a bent rod passed by a straight one, and two bent rods passed with their bends facing. Figure~\ref{fig:AppA_multiplicity_schematic} shows the three configurations at the critical alignment, with the node shared by two segments, and the two segments it is the end of, picked out.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures/Sec_3node_model/fig_multiplicity_schematic.pdf}
+    \caption{Static multiplicity probe, side view at the critical alignment ($x_s = 0$): the highlighted node is the end of both flanking segments (bold), so both push on the obstacle at once. (a)~Straight rod A against a sphere obstacle centered under a node. (b)~Rod A carries a node at the apex of a bend; rod B is nearly straight. (c)~Rod A and rod B each carry an apex, facing each other across the gap. Cross-section radius and centerline offset are shown at $3\times$ true scale for visibility; node spacing and apex curvature are to true scale.}
+    \label{fig:AppA_multiplicity_schematic}
+\end{figure}
+
+\begin{table*}[h]
+\centering
+\small
+\caption{Number of segments pushing on the contact simultaneously, in three static configurations of the two-node model. The last column reports the total force at the maximum count, against the force a single pair would carry at the same gap; the two agree exactly.}
+\label{tab:multiplicity}
+\begin{tabular}{lccc}
+\toprule
+configuration & count & total force & single pair, same gap \\
+\midrule
+straight rod, sphere & $1 \leftrightarrow 2$ & 198.93 & $2 \times 99.46$ \\
+bent rod, straight rod & $2 \leftrightarrow 4$ & 389.69 & $4 \times 97.42$ \\
+two bent rods & $3 \leftrightarrow 4$ & 397.86 & $4 \times 99.46$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The last two columns make the counting exact. At the maximum count the total force equals the count times the force a single pair carries at the same gap, to the digits shown, in all three configurations. The forces are therefore not merely comparable to a multiple of a single pair's contribution but they are that multiple.
+
+The first row is the case just described, one segment carries the contact along an edge and two carry it at a node. In the other two rows, we look at two other cases in which the defect gets worse. In the second configuration the apex of the bent rod is where the contact occurs, and the two edges meeting there are clamped to it throughout the sweep: the count never falls below two, and rises to four when a node of the straight rod passes through the contact as well. In the third, both rods carry an apex at the crossing, and the count is between three and four throughout the engaged window; between alignments the rods separate and the contact disengages. The contact is therefore too stiff wherever a node of the discretization coincides with the contact region, by a factor that depends on the configuration rather than on the mechanics.
+
+The same sweeps with the three-node model give a count of one throughout, to within one percent, which is the residual of the weight function itself.
+
+\paragraph{Sliding test}
+
+\begin{figure*}[!h]
+    \centering
+    \includegraphics[width=\linewidth]{Figures/Sec_3node_model/fig_perturbation_combined.pdf}
+    \caption{\textbf{Mesh-induced perturbation of the two-node contact force under sliding.} (a)~Contact-force magnitude against sliding distance, for a rod of curvature $\kappa = 5\,\mathrm{m}^{-1}$ and edge length $h = 10$~mm swept rigidly past a fixed cylinder of equal radius. The nominal centerline gap is held exactly constant, so the correct response is a horizontal line; the periodic variation, of period $h$ and spanning more than an order of magnitude, is an artifact of the segment-based force evaluation. Crosses mark changes in the candidate contact-pair set, which flank each peak. (b)~Peak-to-peak amplitude of the residual, detrended over $3h$, against edge length.}
+    \label{fig:AppA_perturbation}
+\end{figure*}
+
+The static probe fixes the count at one position at a time. As the contact slides, that count changes, and the force changes with it. We measure this by sweeping a rod rigidly past a fixed cylinder of equal radius at constant speed, over eight edges, with the nominal centerline gap held exactly constant so that the ideal response is a horizontal line. The sweep is kinematic, so it isolates the contact model from the elastic response by measuring the perturbation the model produces, not an actual dynamic response of the system. 
+
+Figure~\ref{fig:AppA_perturbation}(a) shows the result for a rod of curvature $\kappa = 5\,\mathrm{m}^{-1}$ at $h = 10$~mm. The force varies with period one edge and spans more than an order of magnitude, where the exact answer is constant. The crosses mark the instants at which the set of candidate contact pairs changes, and they flank each peak: the force climbs as a second segment comes into range and falls again as the first drops out, which is the doubling of the static probe seen in motion.
+
+It is a modulation and not a series of jumps. Sampling the same sweep at three densities a decade apart leaves the steepest measured slope essentially unchanged, within $4\,\%$, whereas a genuine discontinuity would make it grow in proportion to the sampling density. The force is therefore continuous, as the absence of any selection step implies, but it is unsteady.
+
+Refining the mesh does not remove the defect. Panel~(b) fits the peak-to-peak amplitude against edge length over $h = 10$, $5$ and $2.5$~mm. Refinement attenuates the perturbation only sublinearly, the doubling at shared nodes is a floor that a finer mesh does not lower.
+
+A continuous oscillation of this size is no less damaging than a jump. It is periodic in the mesh, and the response to that forcing is the jitter reported in benchmark sections. In this case, the defect is the double counting of shared nodes, which persists wherever a node lies in the contact region and modulates wherever the contact slides.

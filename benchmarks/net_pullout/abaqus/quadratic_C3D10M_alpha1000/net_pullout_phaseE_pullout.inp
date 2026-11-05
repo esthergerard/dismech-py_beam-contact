@@ -1,0 +1,83 @@
+*Heading
+ Net pull-out, ALTERNATED weave -- JOB 5/5 of the restart chain: Phase E (PULLOUT) -- quadratic C3D10M, alpha=1000 damping (beta=0)
+** ==========================================================================
+** Restart-continuation job: picks up the full model state at the end of
+** job 4 (net_pullout_phaseD_free).
+**
+** Submit with:
+**   abaqus job=net_pullout_phaseE_pullout oldjob=net_pullout_phaseD_free \
+**          input=net_pullout_phaseE_pullout.inp interactive
+**
+** Pull the central x-beam's RIGHT clamp a further +30 mm (cumulative
+** from its nominal, post-release position) over 1.2 s. The left clamp
+** (freed in job 4) is left untouched here and continues to evolve under
+** elastic/contact forces only. SMOOTH_E is the amplitude declared in
+** job A's model data.
+**
+** Three restart-chain behaviours worth knowing before editing this deck:
+** (1) Across a restart job boundary, a plain *Boundary card is ADDITIVE
+**     to the whole carried-forward BC history, not a modification of a
+**     matching entry, even when it reuses the same set name. Any
+**     restart-continuation job that touches *Boundary needs op=NEW,
+**     restating the full table (as below).
+** (2) *Restart, read, step=N uses the GLOBAL CUMULATIVE step number
+**     across the whole chain (A=1, B=2, C=3, D=4, E=5), not a count
+**     relative to oldjob=. A fresh run from job D therefore reads
+**     step=4; resuming a crashed run of job E itself (oldjob=this same
+**     job) would instead need step=5.
+** (3) *Output, history must be restated in any job that also redeclares
+**     *Output, field (as here, to get a finer field cadence than job
+**     A's) -- redeclaring one silently resets the ENTIRE inherited
+**     output-request state, including the energy and node-history
+**     requests. Jobs B/C/D never touch *Output and so correctly keep
+**     inheriting job A's full request.
+**
+** This is the longest step (1.2 s) and involves the most sliding contact
+** activity, so intra-step restart checkpoints every 0.1 s (12 across the
+** step) limit how much a crash late in the pull would cost to redo.
+** ==========================================================================
+*Restart, read, step=4
+**
+*Step, name=PULLOUT
+*Dynamic, Explicit
+ , 1.2
+** dt lowered 1.5e-6 -> 1.0e-7 (2026-10-21): disables mass scaling
+** entirely for this mesh (its own natural floor is 1.31e-7 s) -- see
+** net_pullout_phaseA_engage.inp's ENGAGE step for why the old
+** target crashed (mass-scaling x new Rayleigh damping interaction).
+*Fixed Mass Scaling, dt=1.5e-06, type=below min
+** Tightened 12 -> 60 (2026-10-21, overnight-interruption resilience): at
+** the ~6.6 hr/0.1s-step-time rate observed in Phase A, the old spacing
+** (every 0.1s of step time) risked losing ~6.6 hours per missed
+** checkpoint across this phase's multi-day runtime. Now every 0.02s of
+** step time, ~1.3 hr worst case (Phase E's own rate is still unobserved
+** and may differ once sliding contact is active -- treat this as an
+** estimate, not a guarantee).
+*Restart, write, number interval=60
+**
+*Boundary, op=NEW, amplitude=SMOOTH_E
+Y_ENDS,               1, 3, 0.
+NONCENTRAL_X_END_NEG, 1, 1, -3.75e-3
+NONCENTRAL_X_END_NEG, 2, 3, 0.
+NONCENTRAL_X_END_POS, 1, 1,  3.75e-3
+NONCENTRAL_X_END_POS, 2, 3, 0.
+X_BEAM_2_END_POS,     1, 1, 3.0e-2
+X_BEAM_2_END_POS,     2, 3, 0.
+**
+*Output, field, number interval=40
+*Node Output
+ U, V, RF
+*Element Output
+ S, LE
+*Contact Output
+ CSTRESS
+*Output, history, time interval=2.0e-4
+*Energy Output
+ ALLKE, ALLIE, ALLWK, ALLVD, ALLMW, ETOTAL
+*Node Output, nset=X_ENDS_POS
+ RF1, U1
+*Node Output, nset=X_BEAM_2_END_NEG
+ U1, U2, U3, RF1, RF2, RF3
+*Node Output, nset=X_BEAM_2_END_POS
+ U1, U2, U3, RF1, RF2, RF3
+*End Step

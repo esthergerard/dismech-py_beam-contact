@@ -1,0 +1,76 @@
+*Heading
+ Net pull-out, ALTERNATED weave -- JOB 3/5 of the restart chain: Phase C (RELEASE) -- quadratic C3D10M, alpha=1000 damping (beta=0)
+** ==========================================================================
+** Restart-continuation job: picks up the full model state at the end of
+** job 2 (net_pullout_phaseB_hold).
+**
+** Submit with:
+**   abaqus job=net_pullout_phaseC_release oldjob=net_pullout_phaseB_hold \
+**          input=net_pullout_phaseC_release.inp interactive
+**
+** *Restart, read, step=N uses the GLOBAL CUMULATIVE step number across
+** the whole chain, not a number relative to oldjob=: restart files are
+** cumulative, so step=1 always means "global step 1" (job A's ENGAGE)
+** regardless of which oldjob= is used to get there. This job (C) is
+** global step 3 (A=1, B=2, C=3), so it reads step=2 (B's own HOLD step)
+** to continue from B, not from A.
+**
+** Central x-beam (i=2) ONLY: ramp BOTH clamps symmetrically back to
+** their nominal (t=0) position, unloading all axial tension in that
+** strand before the free-left event in Phase D. All 4 other x-beam
+** clamps and the y-beams stay exactly where job A left them.
+**
+** Two restart-chain behaviours worth knowing before editing this deck:
+** (1) A *Boundary card redefining a set that overlaps one job A already
+**     constrained (here, beam 2's end caps are members of the combined
+**     X_ENDS_NEG/X_ENDS_POS sets job A used) must use op=NEW, restating
+**     the FULL table with only narrow per-beam sets -- without it,
+**     Abaqus/Explicit treats the overlap as a genuine conflicting-
+**     displacement error across the job boundary.
+** (2) A *Boundary line of the form "amplitude=SMOOTH, magnitude=0."
+**     does NOT mean "ramp from the node's current position down to 0"
+**     -- the prescribed value at every instant is magnitude*amplitude(t)
+**     = 0 for all t, independent of the node's true restart-inherited
+**     position. Abaqus detects the resulting jump and, per its jump-
+**     avoidance behaviour, subtracts it from the whole profile, which
+**     for a flat-zero target just freezes the node at its old value for
+**     the entire step. The fix is to target the node's CURRENT value
+**     with a REVERSED amplitude (1 -> 0, "SMOOTH_DOWN" below) instead of
+**     targeting 0 with a forward one: magnitude*amplitude(0) then equals
+**     the node's true current value (no jump), ramping correctly down to
+**     0 by the end of the step. The HOLD lines (Y_ENDS, non-central
+**     beams, beam 2's y/z) need no such fix, since their target already
+**     equals their current value.
+**
+** The HOLD lines and the release lines therefore need different
+** amplitude behaviour, so they're split into two separate *Boundary
+** cards within this step, both using op=NEW (two op=NEW cards combine
+** into one table for the step rather than each wiping it).
+** ==========================================================================
+*Restart, read, step=2
+**
+*Amplitude, name=SMOOTH_DOWN, definition=SMOOTH STEP
+ 0., 1., 0.1, 0.
+**
+*Step, name=RELEASE
+*Dynamic, Explicit
+ , 0.1
+** dt lowered 1.5e-6 -> 1.0e-7 (2026-10-21): disables mass scaling
+** entirely for this mesh (its own natural floor is 1.31e-7 s) -- see
+** net_pullout_phaseA_engage.inp's ENGAGE step for why the old
+** target crashed (mass-scaling x new Rayleigh damping interaction).
+*Fixed Mass Scaling, dt=1.5e-06, type=below min
+*Restart, write, number interval=5
+**
+*Boundary, op=NEW
+Y_ENDS,               1, 3, 0.
+NONCENTRAL_X_END_NEG, 1, 1, -3.75e-3
+NONCENTRAL_X_END_NEG, 2, 3, 0.
+NONCENTRAL_X_END_POS, 1, 1,  3.75e-3
+NONCENTRAL_X_END_POS, 2, 3, 0.
+X_BEAM_2_END_NEG,     2, 3, 0.
+X_BEAM_2_END_POS,     2, 3, 0.
+*Boundary, op=NEW, amplitude=SMOOTH_DOWN
+X_BEAM_2_END_NEG,     1, 1, -3.75e-3
+X_BEAM_2_END_POS,     1, 1,  3.75e-3
+*End Step

@@ -1,0 +1,13 @@
+Pair-event verification (App. B.5) -- source: pair_events_prodblend_mu0.jsonl
+Contact-carrying stencil pair(s): ['(A9,B19)', '(A9,B20)']
+Active-set transitions analysed: 164
+
+quantity                                    min       median          max
+1 - |s*| (neighbour arc end)          6.951e-09    2.347e-05    4.854e-05
+weight product w = w1*w2              1.233e-17    2.634e-10    6.242e-09
+
+Equivalent decimal-place reading (-log10 of the quantity above):
+  |s*| agreement with an arc end : worst 4.3, median 4.6 decimal places
+  weight vanishing (w -> 0)      : worst 8.2, median 9.6 decimal places
+
+Note: the WEIGHT is what multiplies the force (the quantity the Proposition is about), and it is zero to 8+ decimal places at every transition, worst case included.  The arc parameter s* itself only reaches the arc end to ~4-5 decimal places in the worst-case transitions (the blend's quartic falloff near s = +/-1 means a modest s-deviation already gives a negligible weight) -- so '|s*| = 1 to seven decimal places' is not accurate as a blanket statement over all transitions; the vanishing-weight statement is the one that holds uniformly.

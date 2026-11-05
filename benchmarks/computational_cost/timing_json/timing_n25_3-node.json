@@ -1,0 +1,17 @@
+{
+  "counts": {
+    "contact_calls": 1810.0,
+    "newton_iters": 1803.0,
+    "newton_max": 4,
+    "pairs_active": 6941.0,
+    "pairs_candidate": 42557.0,
+    "pairs_stencil": 1373790.0,
+    "steps": 600.0
+  },
+  "times_s": {
+    "assembly": 0.07803950700002638,
+    "broad": 0.07306172399996713,
+    "narrow": 10.117677443999936,
+    "solve": 0.587806208000019
+  }
+}

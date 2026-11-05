@@ -1,0 +1,50 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+MANIFEST
+
+# Unit test / coverage reports
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Jupyter / IPython
+.ipynb_checkpoints
+profile_default/
+ipython_config.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+
+# OS cruft
+.DS_Store
+
+# Editors
+.vscode
+.idea/
+
+# Abaqus solver output -- raw .odb databases are multi-GB binary blobs
+# that regenerate from the .inp decks; the extracted CSVs are tracked
+# normally, only the raw database itself is excluded.
+*.odb
+*.res
+*.sim
+*.lck
+*.023
+
+# NOTE: unlike some sibling repos in this project, .txt/.npz/.csv/.png/
+# .pdf/.svg/.gif are intentionally NOT blanket-ignored here -- this repo
+# ships reference data and rendered figures needed to reproduce the
+# paper's results, and a blanket data-extension ignore previously caused
+# real fixture/reference files to go untracked silently.

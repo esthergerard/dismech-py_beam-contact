@@ -1,0 +1,29 @@
+*Heading
+ Net pull-out, ALTERNATED weave -- JOB 2/5 of the restart chain: Phase B (HOLD) -- quadratic C3D10M, alpha=1000 damping (beta=0)
+** ==========================================================================
+** Restart-continuation job: picks up the COMPLETE model state (mesh,
+** material, contact, sets, amplitudes, and the full *Boundary table) at
+** the end of job 1 (net_pullout_phaseA_engage). No mesh/material/BC
+** redeclaration needed or allowed here -- restart reload supplies it.
+**
+** Submit with (see run_phaseA_to_E_chained.sh for the full chain):
+**   abaqus job=net_pullout_phaseB_hold oldjob=net_pullout_phaseA_engage \
+**          input=net_pullout_phaseB_hold.inp interactive
+**
+** No *Boundary change in this step -- every value set in job A's ENGAGE
+** step is held constant (propagates unchanged across the job boundary,
+** exactly as it would across steps within one job). Lets contact/elastic
+** transients from the engage ramp die out before Phase C.
+** ==========================================================================
+*Restart, read, step=1
+**
+*Step, name=HOLD
+*Dynamic, Explicit
+ , 0.1
+** dt lowered 1.5e-6 -> 1.0e-7 (2026-10-21): disables mass scaling
+** entirely for this mesh (its own natural floor is 1.31e-7 s) -- see
+** net_pullout_phaseA_engage.inp's ENGAGE step for why the old
+** target crashed (mass-scaling x new Rayleigh damping interaction).
+*Fixed Mass Scaling, dt=1.5e-06, type=below min
+*Restart, write, number interval=2
+*End Step
