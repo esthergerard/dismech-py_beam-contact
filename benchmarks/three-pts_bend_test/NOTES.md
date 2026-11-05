@@ -51,9 +51,13 @@ estimated multi-day cost) and not wired into the figures below.
 
 ## Paper data provenance
 
-Figure scripts live in `postprocessing/`; all data they read now lives
-in `external_reference_data/` (see that folder's README for provenance
-and which files are regenerable):
+Figure scripts live in `postprocessing/`. The paths below are where each
+script looks for its data; **none of these files are tracked in the
+public repo** (2.2GB total, over GitHub's size limit) — see
+`external_reference_data/README.md` for which ones to regenerate (and
+how) and which one has no generating script in this repo at all. Every
+script listed degrades gracefully (skips missing curves with a
+`[warn]`) rather than crashing.
 
 | paper figure | script | data file(s) |
 |---|---|---|

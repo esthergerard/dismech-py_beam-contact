@@ -119,7 +119,12 @@ def plot_jitter(
     include_labels: bool = INCLUDE_LABELS,
 ) -> None:
     apply_style()
-    run = load_npz_run(npz_file)
+    try:
+        run = load_npz_run(npz_file)
+    except FileNotFoundError:
+        print(f"  [warn] missing file {npz_file}; skipping {out_basename} "
+              f"(see external_reference_data/README.md)")
+        return
     t, beam_forces = _slice_window(run, time_window)
 
     # ||F_total(t)|| = magnitude of the sum-vector across all beam nodes.

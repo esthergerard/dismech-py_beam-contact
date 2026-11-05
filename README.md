@@ -56,14 +56,22 @@ etc.) with its source location.
 | Appendix A toy cases | App. A | `benchmarks/toy_cases_appendix/` |
 
 Each benchmark folder has its own `NOTES.md`/README with the exact
-commands to regenerate its data and figures from scratch; most figure
-scripts can also just be re-run directly against the data already
-shipped in the repo (no simulation rerun needed):
+commands to regenerate its data and figures from scratch. For
+`two_orthogonal_beams/`, `net_pullout/`, `computational_cost/`, and
+`toy_cases_appendix/`, the reference data is small enough to ship
+directly, so most figure/table scripts can be re-run immediately
+against it with no simulation rerun needed:
 
 ```bash
-cd benchmarks/three-pts_bend_test/postprocessing
-python3 fig6_jitter_metrics.py   # reproduces Table 1
+cd benchmarks/two_orthogonal_beams/postprocessing
+python3 table_soft_soft_jitter.py   # reproduces the Zavarise jitter table
 ```
+
+`three-pts_bend_test/`'s reference data (~2.2GB) exceeds GitHub's size
+limit and isn't tracked, so its figure scripts need that data
+regenerated first — see `benchmarks/three-pts_bend_test/external_reference_data/README.md`
+for exactly what to run (most of it is reproducible; one baseline curve
+is not and would need to be obtained from the authors).
 
 ## Features of the underlying simulator
 

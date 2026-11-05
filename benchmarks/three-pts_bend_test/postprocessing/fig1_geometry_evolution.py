@@ -79,7 +79,11 @@ def plot_geometry_evolution(
 ) -> None:
     apply_style()
 
-    coords = load_coords_file(coords_file)
+    try:
+        coords = load_coords_file(coords_file)
+    except FileNotFoundError:
+        print(f"  [warn] missing file {coords_file}; skipping {out_basename}")
+        return
     times_all = np.unique(coords[:, 0])
 
     if n_frames == "all" or (isinstance(n_frames, int) and n_frames >= times_all.size):
