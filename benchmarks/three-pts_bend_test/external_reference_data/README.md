@@ -5,12 +5,16 @@ These four files feed `postprocessing/fig2_force_displacement.py` and
 runs rather than code, which is why they're kept as data instead of being
 regenerated on every clone.
 
-| file | role | regenerable? |
+| file | role | regenerable from this repo? |
 |---|---|---|
-| `impV_noD_contact_bending_N50.npz` | 2-node (segment) model, N=50, full run to t=900s | yes, with the 2-node contact model (not included in this repo — this is the pre-existing baseline run) |
-| `exact_rL_0p125.csv` | Batista analytical solution, r/L=0.125 | reference data, not a simulation output |
+| `impV_noD_contact_bending_N50.npz` | 2-node (segment) model, N=50, full run to t=900s | **no.** Traced via git history to a separate, parallel simulation implementation (`regularized_contact_Esther/main.py` + `time_stepper.py` + `contact_2nodes_circles.py`) that does not use `src/dismech` at all. That folder was deliberately excluded from this repo (see top-level README), so this file ships as pure reference/baseline data, not something this repo's code can reproduce. |
+| `exact_rL_0p125.csv` | Batista analytical solution, r/L=0.125 | n/a — reference data, not a simulation output |
 | `reg_beam_coords_N50.txt` | 3-node (ours) model, N=50, beam centerline vs time | **yes** — `python contact_bending_test.py 50` reproduces this file byte-for-byte in format (same output filename, same E/nu/dt/save_interval as currently in the script) |
 | `reg_contact_forces_N50.txt` | 3-node (ours) model, N=50, per-node contact force vs time | **yes** — same command as above |
+
+(The 1-node bead baseline, `contact_output_files_3D_bead/reg_beam_coords_N50_bead.txt`
+and `reg_contact_forces_N50_bead.txt`, lives in a sibling folder, not here,
+and *is* regenerable: `python contact_bending_test_3D_bead.py 50`.)
 
 A full `contact_bending_test.py 50` run integrates to t≈1000s at dt=1e-3
 with save_interval=0.01s (1e6 time steps), so it is a long run; the

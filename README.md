@@ -1,7 +1,9 @@
 # dismech-py_beam-contact
 
-Companion code for **"Modeling contact in elastic rods: contact
-geometry for jitter-free simulation"** (Gérard, Jawed, Boucard, Louf).
+### Companion code for the paper: "Modeling contact in elastic rods: contact geometry for jitter-free simulation"
+
+Gérard, Jawed, Boucard, Louf.
+
 This repo contains the three-node arc-based contact model implemented
 in DisMech (a discrete-differential-geometry rod/shell simulator) and
 everything needed to reproduce the paper's three benchmarks and
