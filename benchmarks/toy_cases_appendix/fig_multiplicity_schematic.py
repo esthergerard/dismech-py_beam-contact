@@ -31,7 +31,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 HERE = Path(__file__).resolve().parent
-sys.path.insert(0, str(HERE.parent / "net_pullout" / "postprocessing"))
+sys.path.insert(0, str(HERE))
 from plot_style import LAB_COLORS, apply_style, save_figure
 
 FIG = HERE / "figures"

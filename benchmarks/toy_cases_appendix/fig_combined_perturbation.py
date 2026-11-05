@@ -25,7 +25,6 @@ import matplotlib.pyplot as plt
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-sys.path.insert(0, str(HERE.parent / "net_pullout" / "postprocessing"))
 from analyze_perturbation import metrics
 from plot_style import LAB_COLORS, apply_style, panel_legend, save_figure
 

@@ -23,7 +23,6 @@ import matplotlib.pyplot as plt
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-sys.path.insert(0, str(HERE.parent / "net_pullout" / "postprocessing"))
 from jump_2cosalpha_check import grad_delta
 from plot_style import LAB_COLORS, apply_style, panel_legend, save_figure
 
