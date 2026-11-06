@@ -22,10 +22,10 @@ the same extraction as the rod model are imposed.
   needed by the Fig. 8 script to map node labels to strand identity.
 - `net_pullout_gmsh.py` — generates the quadratic mesh from scratch.
 - `extract_final_shape.py`, `extract_shape_near_time.py`,
-  `extract_phaseA_to_E_chained_odb.py` — the Abaqus-Python extraction
-  scripts that produced the CSVs above from the `.odb` (require a
-  licensed Abaqus install to run; kept for provenance/methodology, not
-  needed to reproduce the figures from the CSVs already here).
+  `extract_phaseA_to_E_chained_odb.py` — Abaqus-Python extraction
+  scripts that produce the CSVs above from a `.odb` (require a licensed
+  Abaqus install; not needed to reproduce the figures from the CSVs
+  already here).
 - `make_paper_figure_phase_grid_alpha_variants.py` — **Figure 8**.
 - `make_paper_figure_convergence_jitter_alpha1000_final.py` — **Figure 9**.
 
@@ -38,13 +38,3 @@ Abaqus license is needed to regenerate Fig. 8 or Fig. 9:
 python3 make_paper_figure_phase_grid_alpha_variants.py
 python3 make_paper_figure_convergence_jitter_alpha1000_final.py
 ```
-
-Both were run against exactly this file set while preparing this repo
-and reproduce the published figures (verified against the manuscript).
-
-## What was left out
-
-An alpha-sensitivity sweep (alpha in {1, 10, 50, 100, 1000}) and an
-earlier linear-element (C3D4) baseline were run during development to
-choose the damping value and element order; neither appears in the
-paper, so only the alpha=1000 quadratic run is kept here.

@@ -50,9 +50,7 @@ Sign conventions: contact forces are returned in the physical convention
 References
 ----------
 D. Eberly, "Distance between two circles in 3D" (Geometric Tools, 2024/2025)
-and "Distance from a point to a circle in 3D"; derivation notebook:
-regularized_contact_Esther/arc_distance_eberly.ipynb (self-contained copy of
-the geometry functions, including derivations dropped from this module).
+and "Distance from a point to a circle in 3D".
 Regression baseline: tests/test_eberly_contact.py (golden file
 tests/resources/eberly_golden.npz).
 """
@@ -2117,8 +2115,7 @@ def _compute_pair_force_and_hessian_line(
 #
 # The 3-node-window + partition-of-unity machinery assumes ISOLATED point
 # contact.  Conforming (tangential / wrapped) contact violates that
-# assumption in two documented ways (knots_catia_Esther/
-# stall_diagnosis_20260918/): (1) along a flat contact ridge every window
+# assumption in two ways: (1) along a flat contact ridge every window
 # pair's minimizer sits at its patch edge, PoU weight 0, so the mid-ridge
 # carries no force; (2) a single window pair can have two near-tied minima
 # whose hard-min swap makes the force discontinuous.  Both broke Newton.

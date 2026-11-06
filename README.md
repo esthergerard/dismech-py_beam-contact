@@ -42,11 +42,6 @@ pytest tests/
 
 ## Reproducing the paper
 
-See `benchmarks/PAPER_MAP.md` for the exact figure/table -> script ->
-data mapping, and `benchmarks/paper_reproducibility_params.md` for
-every simulation parameter (material, time step, contact stiffness,
-etc.) with its source location.
-
 | benchmark | paper section | folder |
 |---|---|---|
 | Beam vs. rigid circular obstacle | Sec. 3 | `benchmarks/three-pts_bend_test/` |
@@ -55,23 +50,19 @@ etc.) with its source location.
 | Computational cost | Sec. 4.5 | `benchmarks/computational_cost/` |
 | Appendix A toy cases | App. A | `benchmarks/toy_cases_appendix/` |
 
-Each benchmark folder has its own `NOTES.md`/README with the exact
-commands to regenerate its data and figures from scratch. For
-`two_orthogonal_beams/`, `net_pullout/`, `computational_cost/`, and
-`toy_cases_appendix/`, the reference data is small enough to ship
-directly, so most figure/table scripts can be re-run immediately
-against it with no simulation rerun needed:
+Each folder has a `NOTES.md` listing its scripts and the figure/table
+each one produces. Most figure/table scripts run directly against the
+data already shipped in the repo:
 
 ```bash
 cd benchmarks/two_orthogonal_beams/postprocessing
 python3 table_soft_soft_jitter.py   # reproduces the Zavarise jitter table
 ```
 
-`three-pts_bend_test/`'s reference data (~2.2GB) exceeds GitHub's size
-limit and isn't tracked, so its figure scripts need that data
-regenerated first — see `benchmarks/three-pts_bend_test/external_reference_data/README.md`
-for exactly what to run (most of it is reproducible; one baseline curve
-is not and would need to be obtained from the authors).
+The exception is `three-pts_bend_test/`, whose reference data exceeds
+GitHub's file size limit and isn't tracked — see
+`benchmarks/three-pts_bend_test/external_reference_data/README.md` for
+the commands to regenerate it.
 
 ## Features of the underlying simulator
 

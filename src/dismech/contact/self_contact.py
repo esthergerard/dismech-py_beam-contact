@@ -1,7 +1,6 @@
 """
 Self-contact (beam-to-beam) force computation using arc-to-arc gap geometry.
 
-Ported from regularized_contact_Esther/contact/beam_beam_contact_functions.py.
 Uses the same IMC energy and weight functions as the circle contact module.
 """
 

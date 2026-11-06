@@ -11,12 +11,9 @@ if TYPE_CHECKING:  # Avoid circular import at runtime
 
 # =============================================================================
 # NOTE:
-# The functions below are copied from
-# `regularized_contact_Esther/contact/extended_arc_gap_functions.py`
-# (geometry and IMC law) and must remain geometrically identical.
-# Only the very last helper
-# `compute_circle_four_nodes_imc_weighted_forces_3d`
-# is a thin wrapper that maps Dismech's 3D DOFs to the 2D contact model.
+# The functions below implement the circular-arc IMC contact geometry and
+# energy law in 2D. The last helper, `compute_circle_four_nodes_imc_weighted_forces_3d`,
+# is a thin wrapper that maps Dismech's 3D DOFs onto that 2D model.
 # =============================================================================
 
 
@@ -458,7 +455,7 @@ def compute_contact_forces_wrt_q(
     k_c: float = 1.0,
 ) -> Tuple[float, np.ndarray, np.ndarray, float, Dict[int, float]]:
     """
-    FULL GEOMETRIC MODEL WITH WEIGHTS (copied from Esther's implementation).
+    FULL GEOMETRIC MODEL WITH WEIGHTS.
 
     k_c: contact stiffness multiplier (adapted externally based on force residual).
     """
