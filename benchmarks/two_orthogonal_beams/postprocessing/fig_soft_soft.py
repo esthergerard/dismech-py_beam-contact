@@ -575,11 +575,5 @@ def plot_metrics(out_dir: Path = OUT_DIR,
     plt.close(fig)
 
 
-def plot_soft_soft() -> None:
-    """Generate both companion figures."""
-    plot_geometry()
-    plot_metrics()
-
-
 if __name__ == "__main__":
-    plot_soft_soft()
+    plot_geometry()

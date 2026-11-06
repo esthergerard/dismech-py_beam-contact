@@ -53,11 +53,6 @@ N_FRAMES = 12
 OUT_DIR = Path(__file__).parent / "figures"
 OUT_BASENAME = "fig1_geometry_evolution"
 
-# --- Companion 1-node bead variant (fig 1b) --------------------------------
-COORDS_FILE_BEAD = Path(__file__).resolve().parents[1] \
-    / "contact_output_files_3D_bead" / "reg_beam_coords_N50_bead.txt"
-OUT_BASENAME_BEAD = "fig1b_geometry_evolution_1node"
-
 # Final-publication switch: when True, axis labels and tick labels are kept
 # (useful while iterating); when False they are stripped so labels can be
 # added back in Inkscape on top of the saved SVG.
@@ -177,8 +172,3 @@ def plot_geometry_evolution(
 
 if __name__ == "__main__":
     plot_geometry_evolution()
-    # fig 1b: same plot, but using the 1-node bead output file.
-    plot_geometry_evolution(
-        coords_file=COORDS_FILE_BEAD,
-        out_basename=OUT_BASENAME_BEAD,
-    )

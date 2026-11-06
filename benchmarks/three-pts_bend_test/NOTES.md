@@ -20,10 +20,11 @@ for how to regenerate the data they read.
 
 | output | script |
 |---|---|
-| Fig. 1 (geometry evolution) | `fig1_geometry_evolution.py` |
-| Fig. 2 (force-displacement) | `fig2_force_displacement.py` |
-| Fig. 3 (mesh convergence) | `fig3_mesh_convergence.py` |
-| Fig. 5c (jitter vs. active nodes) | `fig4_jitter_correlation.py` |
+| Fig. 2 (arc-contact-model illustration) | `fig_extended_arcs.py` |
+| Fig. 4 (beam geometry over time) | `fig1_geometry_evolution.py` |
+| Fig. 5 (force-displacement, zoom, jitter, mesh convergence) | `fig_combined.py` |
 | Table 1 (jitter metrics) | `fig6_jitter_metrics.py` |
-| Arc-contact-model illustration | `fig_extended_arcs.py` |
-| Combined Fig. 5 panels | `fig_combined_withd.py` |
+
+`fig_combined.py` imports `fig2_force_displacement.py`,
+`fig3_mesh_convergence.py`, and `fig4_jitter_correlation.py` as building
+blocks rather than being run standalone.

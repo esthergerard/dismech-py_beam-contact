@@ -143,7 +143,15 @@ def _draw_jitter(ax_left):
     """Panel (c).  Returns (handles, labels) -- empty for this panel."""
     ax_right = ax_left.twinx()
 
-    run = load_npz_run(NPZ_FILE)
+    try:
+        run = load_npz_run(NPZ_FILE)
+    except FileNotFoundError:
+        print(f"  [warn] missing file {NPZ_FILE}; panel (c) left empty")
+        setup_axes(ax_left)
+        ax_left.set_xlabel("time, $t$ [s]")
+        ax_left.set_ylabel(r"Contact force magnitude, $\|\sum_i F_i\|$, [N]")
+        ax_right.set_ylabel("Active beam nodes index")
+        return [], []
     t, beam_forces = _slice_window(run, TIME_WINDOW)
     F_total_mag = np.linalg.norm(beam_forces.sum(axis=1), axis=1)
     F_mag = np.linalg.norm(beam_forces, axis=2)

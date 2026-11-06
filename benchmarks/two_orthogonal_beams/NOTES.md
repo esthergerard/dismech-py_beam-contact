@@ -20,9 +20,8 @@ mesh-convergence plot).
 
 | output | script |
 |---|---|
-| Fig. 6 (geometry) + mesh-convergence metrics | `fig_soft_soft.py` |
+| Fig. 6 (geometry) | `fig_soft_soft.py` |
 | Fig. 7 (6-step and 29-step comparison panels) | `fig_validation_and_final_trace.py` |
-| mu=0 / mu=0.1 29-step comparison | `fig_planar_final_comparison.py` |
 | Frictional mesh-convergence overlay | `friction/plot_friction_mesh_convergence.py` |
-| Jitter table | `table_soft_soft_jitter.py` (`--steps 29 --settling 2 --variant planarRth2` for the 29-step table) |
-| App. B.5 active-set verification | `pair_event_verification.py`, figure via `fig_pair_event_verification.py` |
+| Zavarise jitter table | `table_soft_soft_jitter.py` (`--steps 29 --settling 2 --variant planarRth2` for the 29-step table) |
+| Table B2, App. B.5 active-set verification | `pair_event_verification.py` |
